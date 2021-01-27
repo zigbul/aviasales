@@ -1,19 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import logo from './assets/logo.svg';
 import { ticketNormalize } from './helper';
 import styles from './App.module.scss';
+// const LOW_PRICE = "lowprice";
+// const FASTER = "faster";
 
 function App() {
   const [searchId, setSearchId] = useState();
   const [tickets, setTickets] = useState([]);
   const [stop, setStop] = useState(false);
   const [sortTickets, setSortTickets] = useState([]);
+  const [filter, setFilter] = useState({all: false, without: false, one: false, two: false, three: false});
+  // const [sort, setSort] = useState({sorted: LOW_PRICE});
+  const [sorterActive, setSorterActive] = useState({ lowprice: true, faster: false });
 
   useEffect(() => {
     if (stop === true) {
-      setSortTickets(ticketNormalize(tickets.slice(0, 5)));
+      setSortTickets(ticketNormalize(allSorter(tickets).slice(0, 5)));
     }
-  }, [stop, tickets])
+  }, [stop, tickets, sorterActive]);
+
+  const allSorter = useCallback((tickets1) => {
+    if (sorterActive.lowprice) {
+      return tickets1.sort((a, b) => a.price - b.price);
+    }
+    if (sorterActive.faster) {
+      return tickets1.sort(
+        (a , b) => a.segments[0].duration + a.segments[1].duration  - (b.segments[0].duration + b.segments[1].duration)
+      );
+    };
+    return tickets1;
+  }, [sorterActive]);
 
   useEffect(() => {
     fetch("https://front-test.beta.aviasales.ru/search")
@@ -45,6 +62,11 @@ function App() {
       subscribe();
     }
   }, [searchId, tickets, stop]);
+
+  const sorterHandle = useCallback((sortedButton) => {
+    if(sorterActive[sortedButton]) return;
+    setSorterActive({ lowprice: !sorterActive["lowprice"], faster: !sorterActive["faster"] })
+  }, [sorterActive])
 
   return (
     <div className={styles.app}>
@@ -86,8 +108,18 @@ function App() {
               </div>
             </div>
               <div className={styles.filter}>
-                <div className={ styles['filter__low-price'] }>Самый дешевый</div>
-                <div className={ styles['filter__faster'] }>Самый быстрый</div>
+                <div 
+                  className={sorterActive.lowprice ? styles['filter__low-price_blue'] : styles['filter__low-price'] }
+                  onClick={() => sorterHandle("lowprice")}
+                >
+                    Самый дешевый
+                </div>
+                <div 
+                  className={sorterActive.faster ? styles['filter__faster_blue'] : styles['filter__faster'] }
+                  onClick={() => sorterHandle("faster")}
+                >
+                    Самый быстрый
+                </div>
               </div>
               <div className={styles.tickets}>
                 {sortTickets.map(({id, price, carrier, segments}) => (
