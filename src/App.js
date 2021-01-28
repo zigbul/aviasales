@@ -2,35 +2,46 @@ import React, { useState, useEffect, useCallback } from 'react';
 import logo from './assets/logo.svg';
 import { ticketNormalize } from './helper';
 import styles from './App.module.scss';
-// const LOW_PRICE = "lowprice";
-// const FASTER = "faster";
 
 function App() {
+  
   const [searchId, setSearchId] = useState();
   const [tickets, setTickets] = useState([]);
   const [stop, setStop] = useState(false);
   const [sortTickets, setSortTickets] = useState([]);
-  const [filter, setFilter] = useState({all: false, without: false, one: false, two: false, three: false});
-  // const [sort, setSort] = useState({sorted: LOW_PRICE});
+  const [filter, setFilter] = useState({all: true, without: true, one: true, two: true, three: true});
   const [sorterActive, setSorterActive] = useState({ lowprice: true, faster: false });
 
-  useEffect(() => {
-    if (stop === true) {
-      setSortTickets(ticketNormalize(allSorter(tickets).slice(0, 5)));
-    }
-  }, [stop, tickets, sorterActive]);
-
   const allSorter = useCallback((tickets1) => {
+    const newTicketsArr = [...tickets1];
     if (sorterActive.lowprice) {
-      return tickets1.sort((a, b) => a.price - b.price);
+      return newTicketsArr.sort((a, b) => a.price - b.price);
     }
     if (sorterActive.faster) {
-      return tickets1.sort(
+      return newTicketsArr.sort(
         (a , b) => a.segments[0].duration + a.segments[1].duration  - (b.segments[0].duration + b.segments[1].duration)
       );
     };
-    return tickets1;
+    return newTicketsArr;
   }, [sorterActive]);
+
+  const filteredTickets = useCallback ((tickArr) => {
+    return tickArr.filter((current) => {
+      if (filter.all) return true;
+      if (filter.without && current.segments[0].stops.length === 0 && current.segments[1].stops.length === 0) return true;
+      if (filter.one && current.segments[0].stops.length === 1 && current.segments[1].stops.length === 1) return true;
+      if (filter.two && current.segments[0].stops.length === 2 && current.segments[1].stops.length === 2) return true;
+      if (filter.three && current.segments[0].stops.length === 3 && current.segments[1].stops.length === 3) return true;
+      return false;
+    });
+  }, [filter.all, filter.without, filter.one, filter.two, filter.three]);
+
+  useEffect(() => {
+    if (stop === true) {
+      setSortTickets(ticketNormalize(allSorter(filteredTickets(tickets)).slice(0, 5)));
+    }
+  }, [stop, tickets, sorterActive, allSorter, filteredTickets]);
+
 
   useEffect(() => {
     fetch("https://front-test.beta.aviasales.ru/search")
@@ -68,6 +79,27 @@ function App() {
     setSorterActive({ lowprice: !sorterActive["lowprice"], faster: !sorterActive["faster"] })
   }, [sorterActive])
 
+  const allHandler = (fil) => {
+    let tempFilter = {...filter};
+    tempFilter[fil] = !tempFilter[fil];
+    if (fil === "all") {
+      tempFilter = Object.fromEntries(Object.keys(tempFilter).map((current) => {
+        return [current, tempFilter[fil]];
+      }));
+    } else {
+      if (Object.keys(tempFilter).some(key => tempFilter[key] === false)) {
+        tempFilter["all"] = false;
+      }
+      if (Object.keys(tempFilter).every(key => {
+          if ( key === "all" ) return true;
+          return tempFilter[key] === true;
+      })) {
+        tempFilter["all"] = true;
+      };
+    };
+    setFilter({...tempFilter});
+  };
+
   return (
     <div className={styles.app}>
         <div className={styles['app-wrapper']}>
@@ -80,27 +112,52 @@ function App() {
                 <h3>Количество пересадок</h3>
                 <form>
                   <label className={styles.label}>
-                    <input type="checkbox" className={styles.input} />
+                    <input 
+                      type="checkbox" 
+                      className={styles.input} 
+                      onChange={() => allHandler("all")}
+                      checked={filter.all}
+                      />
                     <span className={styles.checker}></span>
                     Все
                   </label>
                   <label className={styles.label}>
-                    <input type="checkbox" className={styles.input} />
+                    <input 
+                      type="checkbox" 
+                      className={styles.input} 
+                      onChange={() => allHandler("without")}
+                      checked={filter.without}
+                    />
                     <span className={styles.checker}></span>
                     Без пересадок
                   </label>
                   <label className={styles.label}>
-                    <input type="checkbox" className={styles.input} />
+                    <input 
+                      type="checkbox" 
+                      className={styles.input} 
+                      onChange={() => allHandler("one")}
+                      checked={filter.one}
+                    />
                     <span className={styles.checker}></span>
                     1 пересадка
                   </label>
                   <label className={styles.label}>
-                    <input type="checkbox" className={styles.input} />
+                    <input 
+                      type="checkbox" 
+                      className={styles.input} 
+                      onChange={() => allHandler("two")}
+                      checked={filter.two}
+                    />
                     <span className={styles.checker}></span>
                     2 пересадки
                   </label>
                   <label className={styles.label}>
-                    <input type="checkbox" className={styles.input} />
+                    <input 
+                      type="checkbox" 
+                      className={styles.input} 
+                      onChange={() => allHandler("three")}
+                      checked={filter.three}
+                    />
                     <span className={styles.checker}></span>
                     3 пересадки
                   </label>
