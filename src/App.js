@@ -1,19 +1,24 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import logo from './assets/logo.svg';
 import { ticketNormalize } from './helper';
 import styles from './App.module.scss';
 import Sidebar from './components/sidebar';
 import Filter from './components/filter';
 import Tickets from './components/tickets';
+import Spinner from './components/spinner/Spinner';
 
-function App() {
-  
-  const [searchId, setSearchId] = useState();
-  const [tickets, setTickets] = useState([]);
-  const [stop, setStop] = useState(false);
-  const [sortTickets, setSortTickets] = useState([]);
-  const [filter, setFilter] = useState({all: true, without: true, one: true, two: true, three: true});
-  const [sorterActive, setSorterActive] = useState({ lowprice: true, faster: false });
+function App( props ) {
+
+  const { state , setSearchId,
+          setTickets, setStop,
+          setSortTickets, setFilter,
+          setSorterActive } = props;
+
+  const { searchId, tickets, 
+          stop, sortTickets, 
+          filter, sorterActive,
+          loading } = state;
+
 
   const allSorter = useCallback((tickets1) => {
     const newTicketsArr = [...tickets1];
@@ -43,8 +48,7 @@ function App() {
     if (stop === true) {
       setSortTickets(ticketNormalize(allSorter(filteredTickets(tickets)).slice(0, 5)));
     }
-  }, [stop, tickets, sorterActive, allSorter, filteredTickets]);
-
+  }, [stop, tickets, sorterActive, allSorter, filteredTickets, setSortTickets]);
 
   useEffect(() => {
     fetch("https://front-test.beta.aviasales.ru/search")
@@ -53,10 +57,10 @@ function App() {
         setSearchId(res.searchId);
     })
       .catch(e =>console.log(e));
-  }, []);
+  }, [setSearchId]);
 
   useEffect(() => {
-    if(searchId && stop === false) {
+    if (searchId && stop === false) {
       function subscribe() {
         fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${searchId}`)
           .then(res => { 
@@ -67,7 +71,7 @@ function App() {
           })
           .then(ticketsPart => {
             if(ticketsPart.stop) {
-              setStop(true);
+              setStop();
             }
             setTickets([...tickets, ...ticketsPart.tickets]);
           })
@@ -75,12 +79,12 @@ function App() {
       }
       subscribe();
     }
-  }, [searchId, tickets, stop]);
+  }, [searchId, tickets, stop, setTickets, setStop]);
 
   const sorterHandle = useCallback((sortedButton) => {
     if(sorterActive[sortedButton]) return;
     setSorterActive({ lowprice: !sorterActive["lowprice"], faster: !sorterActive["faster"] })
-  }, [sorterActive])
+  }, [sorterActive, setSorterActive]);
 
   const allHandler = (fil) => {
     let tempFilter = {...filter};
@@ -103,6 +107,13 @@ function App() {
     setFilter({...tempFilter});
   };
 
+  let content = Object.values(filter).every((key) => {
+    if (key === true) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <div className={styles.app}>
         <div className={styles['app-wrapper']}>
@@ -120,9 +131,7 @@ function App() {
                 sorterActive={sorterActive}
                 sorterHandle={(sortedButton) => sorterHandle(sortedButton)}
               />
-              <Tickets 
-                sortTickets={sortTickets}
-              />
+              { content ? <h1>no content</h1> : loading ? <Spinner /> : <Tickets sortTickets={ sortTickets } /> }
           </div>
         </div>
       </div>
