@@ -2,6 +2,9 @@ import React, { useState, useEffect, useCallback } from 'react';
 import logo from './assets/logo.svg';
 import { ticketNormalize } from './helper';
 import styles from './App.module.scss';
+import Sidebar from './components/sidebar';
+import Filter from './components/filter';
+import Tickets from './components/tickets';
 
 function App() {
   
@@ -108,112 +111,18 @@ function App() {
           </div>
           <div className={styles.main}>
             <div className={styles['sidebar-wrapper']}>
-              <div className={styles.sidebar}>
-                <h3>Количество пересадок</h3>
-                <form>
-                  <label className={styles.label}>
-                    <input 
-                      type="checkbox" 
-                      className={styles.input} 
-                      onChange={() => allHandler("all")}
-                      checked={filter.all}
-                      />
-                    <span className={styles.checker}></span>
-                    Все
-                  </label>
-                  <label className={styles.label}>
-                    <input 
-                      type="checkbox" 
-                      className={styles.input} 
-                      onChange={() => allHandler("without")}
-                      checked={filter.without}
-                    />
-                    <span className={styles.checker}></span>
-                    Без пересадок
-                  </label>
-                  <label className={styles.label}>
-                    <input 
-                      type="checkbox" 
-                      className={styles.input} 
-                      onChange={() => allHandler("one")}
-                      checked={filter.one}
-                    />
-                    <span className={styles.checker}></span>
-                    1 пересадка
-                  </label>
-                  <label className={styles.label}>
-                    <input 
-                      type="checkbox" 
-                      className={styles.input} 
-                      onChange={() => allHandler("two")}
-                      checked={filter.two}
-                    />
-                    <span className={styles.checker}></span>
-                    2 пересадки
-                  </label>
-                  <label className={styles.label}>
-                    <input 
-                      type="checkbox" 
-                      className={styles.input} 
-                      onChange={() => allHandler("three")}
-                      checked={filter.three}
-                    />
-                    <span className={styles.checker}></span>
-                    3 пересадки
-                  </label>
-                </form>
-              </div>
+              <Sidebar 
+                allHandler={(fil) => allHandler(fil)}
+                filter={filter} 
+              />
             </div>
-              <div className={styles.filter}>
-                <div 
-                  className={sorterActive.lowprice ? styles['filter__low-price_blue'] : styles['filter__low-price'] }
-                  onClick={() => sorterHandle("lowprice")}
-                >
-                    Самый дешевый
-                </div>
-                <div 
-                  className={sorterActive.faster ? styles['filter__faster_blue'] : styles['filter__faster'] }
-                  onClick={() => sorterHandle("faster")}
-                >
-                    Самый быстрый
-                </div>
-              </div>
-              <div className={styles.tickets}>
-                {sortTickets.map(({id, price, carrier, segments}) => (
-                <div className={styles.ticket} key={id}>
-                  <div className={styles['ticket__header']}>
-                    <div className={styles['ticket__price']}>
-                      {price}
-                    </div>
-                    <div className={styles['ticket__logo']}>
-                      <img src={carrier} alt="avia logo" />
-                    </div>
-                  </div> 
-                  <div className={styles['ticket__data-wrapper']}>
-                    {segments.map(({id, out, outTime, timeInFlight, stops, stopCitys}) => (
-                      <div className={styles['ticket__data']} key={id}>
-                        <div className={styles['ticket__item']}>
-                          <p className={styles['ticket__item-grey']}>{out}</p>
-                          <p>
-                            {outTime}
-                          </p>
-                        </div>
-                        <div className={styles['ticket__item']}>
-                          <p className={styles['ticket__item-grey']}>В пути</p>
-                          <p>
-                            {timeInFlight}</p>
-                        </div>
-                        <div className={styles['ticket__item']}>
-                          <p className={styles['ticket__item-grey']}>
-                            {stops}
-                          </p>
-                          <p>{stopCitys}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>))}
-              </div>
+              <Filter
+                sorterActive={sorterActive}
+                sorterHandle={(sortedButton) => sorterHandle(sortedButton)}
+              />
+              <Tickets 
+                sortTickets={sortTickets}
+              />
           </div>
         </div>
       </div>

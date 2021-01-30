@@ -1,0 +1,46 @@
+.filter {
+   grid-area: filter;
+   min-width: 502px;
+   display: flex;
+   height: 50px;
+   align-items: center;
+   margin-bottom: 20px;
+
+   &__low-price, &__faster {
+      line-height: 50px;
+      flex-basis: 50%;
+      background: #fff;
+      text-align: center;
+      border: 1px solid #dfe5ec;
+      cursor: pointer;
+      user-select: none;
+
+      &_blue {
+         line-height: 50px;
+         flex-basis: 50%;
+         background: #2196f3;
+         text-align: center;
+         border: none;
+         color: #fff;
+         cursor: pointer;
+         user-select: none;
+      }
+   }
+
+   &__low-price {
+      border-radius: 5px 0 0 5px;
+
+      &_blue {
+         border-radius: 5px 0 0 5px;
+         transition-duration: 2ms;
+      }
+   }
+
+   &__faster {
+      border-radius: 0px 5px 5px 0;
+
+      &_blue {
+         border-radius: 0px 5px 5px 0;
+      }
+   }
+}

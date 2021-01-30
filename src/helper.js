@@ -2,7 +2,7 @@ export function ticketNormalize(arrOTicket) {
 
    function setKey() {
       return `_${Math.random().toString(36).substr(2, 9)}`;
-    };
+   };
 
    function priceNormalize(price) {
       return price
@@ -68,3 +68,4 @@ export function ticketNormalize(arrOTicket) {
       };
    });
 };
+
