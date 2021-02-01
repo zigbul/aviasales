@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import styles from './Tickets.module.scss';
 
 const Tickets = ({ sortTickets }) => {
@@ -42,4 +43,10 @@ const Tickets = ({ sortTickets }) => {
    );
 };
 
-export default Tickets;
+const mapStateToProps = ({ sortTickets }) => {
+   return {
+      sortTickets,
+   };
+};
+
+export default connect(mapStateToProps)(Tickets);

@@ -1,4 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
+import * as actions from './actions';
 import logo from './assets/logo.svg';
 import { ticketNormalize } from './helper';
 import styles from './App.module.scss';
@@ -7,18 +9,8 @@ import Filter from './components/filter';
 import Tickets from './components/tickets';
 import Spinner from './components/spinner/Spinner';
 
-function App( props ) {
-
-  const { state , setSearchId,
-          setTickets, setStop,
-          setSortTickets, setFilter,
-          setSorterActive } = props;
-
-  const { searchId, tickets, 
-          stop, sortTickets, 
-          filter, sorterActive,
-          loading } = state;
-
+function App( { searchId, tickets, stop, sortTickets, filter, sorterActive, loading, setSearchId,
+  setTickets, setStop, setSortTickets } ) {
 
   const allSorter = useCallback((tickets1) => {
     const newTicketsArr = [...tickets1];
@@ -81,32 +73,6 @@ function App( props ) {
     }
   }, [searchId, tickets, stop, setTickets, setStop]);
 
-  const sorterHandle = useCallback((sortedButton) => {
-    if(sorterActive[sortedButton]) return;
-    setSorterActive({ lowprice: !sorterActive["lowprice"], faster: !sorterActive["faster"] })
-  }, [sorterActive, setSorterActive]);
-
-  const allHandler = (fil) => {
-    let tempFilter = {...filter};
-    tempFilter[fil] = !tempFilter[fil];
-    if (fil === "all") {
-      tempFilter = Object.fromEntries(Object.keys(tempFilter).map((current) => {
-        return [current, tempFilter[fil]];
-      }));
-    } else {
-      if (Object.keys(tempFilter).some(key => tempFilter[key] === false)) {
-        tempFilter["all"] = false;
-      }
-      if (Object.keys(tempFilter).every(key => {
-          if ( key === "all" ) return true;
-          return tempFilter[key] === true;
-      })) {
-        tempFilter["all"] = true;
-      };
-    };
-    setFilter({...tempFilter});
-  };
-
   let content = Object.values(filter).every((key) => {
     if (key === true) {
       return false;
@@ -122,20 +88,23 @@ function App( props ) {
           </div>
           <div className={styles.main}>
             <div className={styles['sidebar-wrapper']}>
-              <Sidebar 
-                allHandler={(fil) => allHandler(fil)}
-                filter={filter} 
-              />
+              <Sidebar />
             </div>
-              <Filter
-                sorterActive={sorterActive}
-                sorterHandle={(sortedButton) => sorterHandle(sortedButton)}
-              />
-              { content ? <h1>no content</h1> : loading ? <Spinner /> : <Tickets sortTickets={ sortTickets } /> }
+              <Filter />
+              { content ? <h2 className={styles.empty} >No tickets found!</h2> : loading ? <Spinner /> : <Tickets sortTickets={ sortTickets } /> }
           </div>
         </div>
       </div>
   );
 };
 
-export default App;
+const mapStateToProps = ({ searchId, tickets, stop, sortTickets, filter, sorterActive, loading }) => {
+  return {
+    searchId, tickets, 
+    stop, sortTickets, 
+    filter, sorterActive,
+    loading
+  };
+};
+
+export default connect(mapStateToProps, actions)(App);

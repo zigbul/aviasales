@@ -1,7 +1,31 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
 import styles from './Sidebar.module.scss';
 
-const Sidebar = ({allHandler, filter}) => {
+const Sidebar = ({ filter, setFilter }) => {
+
+   const allHandler = (fil) => {
+      let tempFilter = {...filter};
+      tempFilter[fil] = !tempFilter[fil];
+      if (fil === "all") {
+         tempFilter = Object.fromEntries(Object.keys(tempFilter).map((current) => {
+            return [current, tempFilter[fil]];
+         }));
+      } else {
+         if (Object.keys(tempFilter).some(key => tempFilter[key] === false)) {
+            tempFilter["all"] = false;
+         }
+         if (Object.keys(tempFilter).every(key => {
+            if ( key === "all" ) return true;
+            return tempFilter[key] === true;
+         })) {
+            tempFilter["all"] = true;
+         };
+      };
+      setFilter({...tempFilter});
+   };
+
    return (
       <div className={styles.sidebar}>
          <h3>Количество пересадок</h3>
@@ -58,7 +82,13 @@ const Sidebar = ({allHandler, filter}) => {
             </label>
          </form>
       </div>
-   )
-}
+   );
+};
 
-export default Sidebar;
+const mapStateToProps = ({ filter }) => {
+   return {
+      filter,
+   };
+};
+
+export default connect(mapStateToProps, actions)(Sidebar);

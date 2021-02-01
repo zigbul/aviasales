@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { connect } from 'react-redux';
+import * as actions from '../../actions';
 import styles from './Filter.module.scss';
 
-const Filter = ({ sorterActive, sorterHandle }) => {
+const Filter = ({ sorterActive, setSorterActive }) => {
+
+   const sorterHandle = useCallback((sortedButton) => {
+      if(sorterActive[sortedButton]) return;
+      setSorterActive({ lowprice: !sorterActive["lowprice"], faster: !sorterActive["faster"] })
+   }, [sorterActive, setSorterActive]);
+   
    return (
       <div className={styles.filter}>
          <div 
@@ -17,7 +25,13 @@ const Filter = ({ sorterActive, sorterHandle }) => {
             Самый быстрый
          </div>
       </div>
-   )
-}
+   );
+};
 
-export default Filter;
+const mapStateToProps = ({ sorterActive }) => {
+   return {
+      sorterActive,
+   };
+};
+
+export default connect(mapStateToProps, actions)(Filter);
