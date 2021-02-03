@@ -1,26 +1,27 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import * as actions from '../../redux/actions';
 import styles from './Sidebar.module.scss';
+import { transfer } from '../../constants';
 
 const Sidebar = ({ filter, setFilter }) => {
 
-   const allHandler = (fil) => {
+   const allHandler = (transferValue) => {
       let tempFilter = {...filter};
-      tempFilter[fil] = !tempFilter[fil];
-      if (fil === "all") {
+      tempFilter[transferValue] = !tempFilter[transferValue];
+      if (transferValue === transfer.ALL) {
          tempFilter = Object.fromEntries(Object.keys(tempFilter).map((current) => {
-            return [current, tempFilter[fil]];
+            return [current, tempFilter[transferValue]];
          }));
       } else {
          if (Object.keys(tempFilter).some(key => tempFilter[key] === false)) {
-            tempFilter["all"] = false;
+            tempFilter[transfer.ALL] = false;
          }
          if (Object.keys(tempFilter).every(key => {
-            if ( key === "all" ) return true;
+            if ( key === transfer.ALL ) return true;
             return tempFilter[key] === true;
          })) {
-            tempFilter["all"] = true;
+            tempFilter[transfer.ALL] = true;
          };
       };
       setFilter({...tempFilter});
@@ -34,7 +35,7 @@ const Sidebar = ({ filter, setFilter }) => {
                <input 
                   type="checkbox" 
                   className={styles.input} 
-                  onChange={() => allHandler("all")}
+                  onChange={() => allHandler(transfer.ALL)}
                   checked={filter.all}
                />
                <span className={styles.checker}></span>
@@ -44,7 +45,7 @@ const Sidebar = ({ filter, setFilter }) => {
                <input 
                   type="checkbox" 
                   className={styles.input} 
-                  onChange={() => allHandler("without")}
+                  onChange={() => allHandler(transfer.WITHOUT)}
                   checked={filter.without}
                />
                <span className={styles.checker}></span>
@@ -54,7 +55,7 @@ const Sidebar = ({ filter, setFilter }) => {
                <input 
                   type="checkbox" 
                   className={styles.input} 
-                  onChange={() => allHandler("one")}
+                  onChange={() => allHandler(transfer.ONE)}
                   checked={filter.one}
                />
                <span className={styles.checker}></span>
@@ -64,7 +65,7 @@ const Sidebar = ({ filter, setFilter }) => {
                <input 
                   type="checkbox" 
                   className={styles.input} 
-                  onChange={() => allHandler("two")}
+                  onChange={() => allHandler(transfer.TWO)}
                   checked={filter.two}
             />
                <span className={styles.checker}></span>
@@ -74,7 +75,7 @@ const Sidebar = ({ filter, setFilter }) => {
                <input 
                   type="checkbox" 
                   className={styles.input} 
-                  onChange={() => allHandler("three")}
+                  onChange={() => allHandler(transfer.THREE)}
                   checked={filter.three}
             />
                <span className={styles.checker}></span>

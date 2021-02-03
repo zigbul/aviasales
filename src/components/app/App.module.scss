@@ -70,12 +70,12 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background: url('./assets/checker-off.svg');
+  background: url('../../assets/checker-off.svg');
   margin-left: -30px;
 }
 
 .input:checked + .checker {
-  background: url('./assets/checker-on.svg');
+  background: url('../../assets/checker-on.svg');
 }
 
 .empty {

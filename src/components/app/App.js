@@ -1,13 +1,14 @@
 import React, { useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
-import * as actions from './actions';
-import logo from './assets/logo.svg';
-import { ticketNormalize } from './helper';
+import * as actions from '../../redux/actions';
+import logo from '../../assets/logo.svg';
+import { ticketNormalize } from '../../helper';
+import { aviasalesURL } from '../../constants';
 import styles from './App.module.scss';
-import Sidebar from './components/sidebar';
-import Filter from './components/filter';
-import Tickets from './components/tickets';
-import Spinner from './components/spinner/Spinner';
+import Sidebar from '../sidebar';
+import Filter from '../filter';
+import Tickets from '../tickets';
+import Spinner from '../spinner/Spinner';
 
 function App( { searchId, tickets, stop, sortTickets, filter, sorterActive, loading, setSearchId,
   setTickets, setStop, setSortTickets } ) {
@@ -27,23 +28,27 @@ function App( { searchId, tickets, stop, sortTickets, filter, sorterActive, load
 
   const filteredTickets = useCallback ((tickArr) => {
     return tickArr.filter((current) => {
+
+      const transfersForward = current.segments[0].stops.length;
+      const transfersBackward = current.segments[1].stops.length;
+
       if (filter.all) return true;
-      if (filter.without && current.segments[0].stops.length === 0 && current.segments[1].stops.length === 0) return true;
-      if (filter.one && current.segments[0].stops.length === 1 && current.segments[1].stops.length === 1) return true;
-      if (filter.two && current.segments[0].stops.length === 2 && current.segments[1].stops.length === 2) return true;
-      if (filter.three && current.segments[0].stops.length === 3 && current.segments[1].stops.length === 3) return true;
+      if (filter.without && transfersForward === 0 && transfersBackward === 0) return true;
+      if (filter.one && transfersForward === 1 && transfersBackward === 1) return true;
+      if (filter.two && transfersForward === 2 && transfersBackward === 2) return true;
+      if (filter.three && transfersForward === 3 && transfersBackward === 3) return true;
       return false;
     });
   }, [filter.all, filter.without, filter.one, filter.two, filter.three]);
 
   useEffect(() => {
-    if (stop === true) {
+    if (stop) {
       setSortTickets(ticketNormalize(allSorter(filteredTickets(tickets)).slice(0, 5)));
     }
   }, [stop, tickets, sorterActive, allSorter, filteredTickets, setSortTickets]);
 
   useEffect(() => {
-    fetch("https://front-test.beta.aviasales.ru/search")
+    fetch(`${aviasalesURL}search`)
       .then((res) => res.json())
       .then((res) => {
         setSearchId(res.searchId);
@@ -54,7 +59,7 @@ function App( { searchId, tickets, stop, sortTickets, filter, sorterActive, load
   useEffect(() => {
     if (searchId && stop === false) {
       function subscribe() {
-        fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${searchId}`)
+        fetch(`${aviasalesURL}tickets?searchId=${searchId}`)
           .then(res => { 
             if(res.status === 500) {
               subscribe();
@@ -74,7 +79,7 @@ function App( { searchId, tickets, stop, sortTickets, filter, sorterActive, load
   }, [searchId, tickets, stop, setTickets, setStop]);
 
   let content = Object.values(filter).every((key) => {
-    if (key === true) {
+    if (key) {
       return false;
     }
     return true;
