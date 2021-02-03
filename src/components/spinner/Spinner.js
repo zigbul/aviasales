@@ -1,10 +1,13 @@
 import React from 'react';
+import 'antd/dist/antd.css';
 import styles from './Spinner.module.scss';
+
+import { Spin } from 'antd';
 
 const Spinner = () => {
    return (
       <div className={styles.spinner}>
-         <h2>Loading...</h2>
+         <Spin size="large" />
       </div>
    )
 }
