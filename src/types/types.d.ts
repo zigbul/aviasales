@@ -6,3 +6,29 @@ interface IRequiredParams {
 }
 
 export type SearchedParams = IRequiredParams & Record<string, string>;
+
+export interface ITicketData {
+  id: string;
+  price: { total: string };
+  itineraries: IItinerary[];
+  validatingAirlineCodes: string[];
+}
+
+interface IItinerary {
+  duration: string;
+  segments: ISegment[];
+}
+
+interface ISegment {
+  departure: {
+    iataCode: string;
+    at: string;
+  };
+  arrival: {
+    iataCode: string;
+    at: string;
+  };
+  carrierCode: string;
+  duration: string;
+  numberOfStops: number;
+}

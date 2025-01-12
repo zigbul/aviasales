@@ -20,7 +20,12 @@ const App = () => {
     return <div>Loading...</div>;
   }
 
-  return <div>App</div>;
+  return (
+    <div>
+      <h2>Билеты</h2>
+      <ul>App</ul>
+    </div>
+  );
 };
 
 export default App;

@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 
 import fetchAccessToken from '../utils/fetchAccessToken.ts';
 import addSearchParams from '../utils/addSearchParams.ts';
-import { SearchedParams } from '../types/types';
+import normalizeTicketData from '../utils/normalizeTicketData.ts';
+
+import { SearchedParams, ITicketData } from '../types/types';
 
 const useFetchTickets = (params: SearchedParams) => {
-  const [tickets, setTickets] = useState([]);
+  const [tickets, setTickets] = useState<ITicketData[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -26,8 +28,9 @@ const useFetchTickets = (params: SearchedParams) => {
           },
         });
 
-        const data = await response.json();
-        setTickets(data);
+        const { data } = await response.json();
+        const normalizedTicketData = normalizeTicketData(data);
+        setTickets(normalizedTicketData);
       } catch (e) {
         console.log('Error fetching tickets:', e);
         setError((e as Error).message);
