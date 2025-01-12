@@ -9,7 +9,7 @@ export type SearchedParams = IRequiredParams & Record<string, string>;
 
 export interface ITicketData {
   id: string;
-  price: { total: string };
+  price: { total: string; currency: string };
   itineraries: IItinerary[];
   validatingAirlineCodes: string[];
 }

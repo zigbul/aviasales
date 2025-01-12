@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
-import useFetchTickets from './hooks/useFetchTickets.tsx';
-import { SearchedParams } from './types/types';
+import { SearchedParams } from '../../types/types';
+
+import TicketsList from '../TicketList/index.tsx';
 
 const App = () => {
   const [params, setParams] = useState<SearchedParams>({
@@ -12,18 +13,10 @@ const App = () => {
     currencyCode: 'RUB',
   });
 
-  const { tickets, loading } = useFetchTickets(params);
-
-  console.log(tickets);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <div>
       <h2>Билеты</h2>
-      <ul>App</ul>
+      <TicketsList params={params} />
     </div>
   );
 };

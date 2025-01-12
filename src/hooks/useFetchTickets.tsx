@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import fetchAccessToken from '../utils/fetchAccessToken.ts';
-import addSearchParams from '../utils/addSearchParams.ts';
+import createUrl from '../utils/createUrl.ts';
 import normalizeTicketData from '../utils/normalizeTicketData.ts';
 
 import { SearchedParams, ITicketData } from '../types/types';
@@ -19,7 +19,7 @@ const useFetchTickets = (params: SearchedParams) => {
       try {
         const accessToken = await fetchAccessToken();
         const header = `Bearer ${accessToken}`;
-        const url = addSearchParams(params);
+        const url = createUrl(params);
 
         const response = await fetch(url, {
           headers: {

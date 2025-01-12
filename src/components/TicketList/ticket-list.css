@@ -1,0 +1,36 @@
+.ticket-list__item {
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.ticket {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.ticket__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket-list__itinerary {
+  border-top: 1px dashed #ccc;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.ticket__total-duration {
+  text-align: center;
+}
+
+.ticket__segment-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticket__segment-list-item {
+  display: flex;
+  justify-content: space-between;
+}

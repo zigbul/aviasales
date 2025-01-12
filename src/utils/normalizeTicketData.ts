@@ -22,6 +22,7 @@ function normalizeTicketData(ticketData: ITicketData[]): ITicketData[] {
       id: ticket.id,
       price: {
         total: ticket.price.total,
+        currency: ticket.price.currency,
       },
       itineraries: [
         {
