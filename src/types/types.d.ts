@@ -32,3 +32,5 @@ interface ISegment {
   duration: string;
   numberOfStops: number;
 }
+
+export type SortByTypes = 'duration' | 'price';

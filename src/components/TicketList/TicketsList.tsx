@@ -1,14 +1,16 @@
 import { FC } from 'react';
 import './ticket-list.css';
 
-import { ITicketData, SearchedParams } from '../../types/types';
+import { ITicketData, SearchedParams, SortByTypes } from '../../types/types';
 
 import useFetchTickets from '../../hooks/useFetchTickets.tsx';
 
 import formatDuration from '../../utils/formatDuration.ts';
+import convertDurationInMinutes from '../../utils/convertDurationInMinutes.ts';
 
 type TicketListProps = {
   params: SearchedParams;
+  sortBy: SortByTypes;
 };
 
 const TicketListItem: FC<ITicketData> = ({ price, validatingAirlineCodes, itineraries }) => {
@@ -51,14 +53,29 @@ const TicketListItem: FC<ITicketData> = ({ price, validatingAirlineCodes, itiner
   );
 };
 
-const TicketsList: FC<TicketListProps> = ({ params }) => {
+const TicketsList: FC<TicketListProps> = ({ params, sortBy }) => {
   const { tickets, loading } = useFetchTickets(params);
+
+  const sortedTickets = [...tickets].sort((a, b) => {
+    if (sortBy === 'duration') {
+      const firstDuration: number = convertDurationInMinutes(a.itineraries[0].duration);
+      const secondDuration: number = convertDurationInMinutes(b.itineraries[0].duration);
+
+      return firstDuration - secondDuration;
+    }
+
+    if (sortBy === 'price') {
+      return parseInt(a.price.total, 10) - parseInt(b.price.total, 10);
+    }
+
+    return 0;
+  });
 
   if (loading) return <h2>Loading...</h2>;
 
   return (
     <ul>
-      {tickets.map((ticket) => (
+      {sortedTickets.map((ticket) => (
         <TicketListItem key={ticket.id} {...ticket} />
       ))}
     </ul>

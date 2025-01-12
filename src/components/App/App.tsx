@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from 'react';
 
 import './app.css';
 
-import { SearchedParams } from '../../types/types';
+import { SearchedParams, SortByTypes } from '../../types/types';
 
 import TicketsList from '../TicketList/index.tsx';
 import Sidebar from '../Sidebar/Sidebar.tsx';
@@ -16,16 +16,18 @@ const App = () => {
     currencyCode: 'RUB',
   });
 
+  const [sortBy, setSortBy] = useState<SortByTypes>('price');
+
   const noStopValueChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setParams({ ...params, nonStop: e.target.checked });
   };
 
   return (
     <div className="app">
-      <Sidebar noStopValueChange={noStopValueChange} />
+      <Sidebar noStopValueChange={noStopValueChange} setSortBy={setSortBy} sortBy={sortBy} />
       <main className="app__main">
         <h2>Билеты</h2>
-        <TicketsList params={params} />
+        <TicketsList params={params} sortBy={sortBy} />
       </main>
     </div>
   );
