@@ -5,7 +5,7 @@ interface IRequiredParams {
   adults: string;
 }
 
-export type SearchedParams = IRequiredParams & Record<string, string>;
+export type SearchedParams = IRequiredParams & Record<string, string | boolean>;
 
 export interface ITicketData {
   id: string;
