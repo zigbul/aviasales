@@ -6,6 +6,7 @@ import { ITicketData, SearchedParams, SortByTypes } from '../../types/types';
 import useFetchTickets from '../../hooks/useFetchTickets.tsx';
 
 import formatDuration from '../../utils/formatDuration.ts';
+import formatDateAndTime from '../../utils/formatDateAndTime.ts';
 import convertDurationInMinutes from '../../utils/convertDurationInMinutes.ts';
 
 type TicketListProps = {
@@ -33,7 +34,8 @@ const TicketListItem: FC<ITicketData> = ({ price, validatingAirlineCodes, itiner
                     {segment.departure.iataCode} - {segment.arrival.iataCode}
                   </div>
                   <div>
-                    {segment.departure.at} - {segment.arrival.at}
+                    {formatDateAndTime(segment.departure.at)} -{' '}
+                    {formatDateAndTime(segment.arrival.at)}
                   </div>
                 </div>
                 <div className="ticket__segment-list-column">
@@ -41,7 +43,7 @@ const TicketListItem: FC<ITicketData> = ({ price, validatingAirlineCodes, itiner
                   <div>{formatDuration(segment.duration)}</div>
                 </div>
                 <div className="ticket__segment-list-column">
-                  <div className="ticket__segment-title">{segment.numberOfStops} пересадки</div>
+                  <div className="ticket__segment-title">Пересадки: {segment.numberOfStops}</div>
                   <div>{segment.carrierCode}</div>
                 </div>
               </li>
