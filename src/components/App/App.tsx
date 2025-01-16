@@ -4,8 +4,9 @@ import './app.css';
 
 import { SearchedParams, SortByTypes } from '../../types/types';
 
-import TicketsList from '../TicketList/index.tsx';
-import Sidebar from '../Sidebar/Sidebar.tsx';
+import TicketsList from '../TicketList';
+import Sidebar from '../Sidebar';
+import SearchBar from '../SearchBar';
 
 const App = () => {
   const [params, setParams] = useState<SearchedParams>({
@@ -24,11 +25,16 @@ const App = () => {
 
   return (
     <div className="app">
-      <Sidebar noStopValueChange={noStopValueChange} setSortBy={setSortBy} sortBy={sortBy} />
-      <main className="app__main">
-        <h2>Билеты</h2>
-        <TicketsList params={params} sortBy={sortBy} />
-      </main>
+      <header>
+        <SearchBar params={params} setParams={setParams} />
+      </header>
+      <div className="app__container">
+        <Sidebar noStopValueChange={noStopValueChange} setSortBy={setSortBy} sortBy={sortBy} />
+        <main className="app__main">
+          <h2>Билеты</h2>
+          <TicketsList params={params} sortBy={sortBy} />
+        </main>
+      </div>
     </div>
   );
 };
