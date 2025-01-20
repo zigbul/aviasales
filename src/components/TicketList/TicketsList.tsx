@@ -1,4 +1,6 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
+
 import './ticket-list.css';
 
 import { ITicketData, SearchedParams, SortByTypes } from '../../types/types';
@@ -14,7 +16,7 @@ type TicketListProps = {
   sortBy: SortByTypes;
 };
 
-const TicketListItem: FC<ITicketData> = ({ price, validatingAirlineCodes, itineraries }) => {
+const TicketListItem: FC<ITicketData> = ({ id, price, validatingAirlineCodes, itineraries }) => {
   return (
     <li className="ticket-list__item ticket">
       <header className="ticket__header">
@@ -51,6 +53,8 @@ const TicketListItem: FC<ITicketData> = ({ price, validatingAirlineCodes, itiner
           </ul>
         </section>
       ))}
+
+      <Link to={`/ticket/${id}`}>Подробнее</Link>
     </li>
   );
 };

@@ -1,12 +1,13 @@
 import { ChangeEvent, useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
 
 import './app.css';
 
 import { SearchedParams, SortByTypes } from '../../types/types';
 
-import TicketsList from '../TicketList';
-import Sidebar from '../Sidebar';
-import SearchBar from '../SearchBar';
+import MainPage from '../../Pages/MainPage';
+import TicketPage from '../../Pages/TicketPage';
+import NotFoundPage from '../../Pages/NotFoundPage';
 
 const App = () => {
   const [params, setParams] = useState<SearchedParams>({
@@ -24,18 +25,22 @@ const App = () => {
   };
 
   return (
-    <div className="app">
-      <header>
-        <SearchBar params={params} setParams={setParams} />
-      </header>
-      <div className="app__container">
-        <Sidebar noStopValueChange={noStopValueChange} setSortBy={setSortBy} sortBy={sortBy} />
-        <main className="app__main">
-          <h2>Билеты</h2>
-          <TicketsList params={params} sortBy={sortBy} />
-        </main>
-      </div>
-    </div>
+    <Routes>
+      <Route
+        index
+        element={
+          <MainPage
+            params={params}
+            setParams={setParams}
+            noStopValueChange={noStopValueChange}
+            sortBy={sortBy}
+            setSortBy={setSortBy}
+          />
+        }
+      />
+      <Route path="/ticket/:id" element={<TicketPage />} />
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 };
 
