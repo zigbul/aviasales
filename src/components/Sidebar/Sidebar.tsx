@@ -2,17 +2,18 @@ import { ChangeEvent, FC } from 'react';
 
 import './sidebar.css';
 
-import { SortByTypes } from '../../types/types';
+import { SortByTypes } from '../../types/types.ts';
+import { RootState } from '../../redux/store.ts';
 
-interface ISidebarProps {
-  noStopValueChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  setSortBy: (sort: SortByTypes) => void;
-  sortBy: SortByTypes;
-}
+import { setSortBy, nonStopValueChange } from '../../redux/slices/ticketsSlice.ts';
+import { useDispatch, useSelector } from 'react-redux';
 
-const Sidebar: FC<ISidebarProps> = ({ noStopValueChange, setSortBy, sortBy }) => {
+const Sidebar: FC = () => {
+  const { sortBy } = useSelector((state: RootState) => state.tickets);
+  const dispatch = useDispatch();
+
   const onSortValueChange = (e: ChangeEvent<HTMLInputElement>): void => {
-    setSortBy(e.target.value as SortByTypes);
+    dispatch(setSortBy(e.target.value as SortByTypes));
   };
 
   return (
@@ -20,7 +21,7 @@ const Sidebar: FC<ISidebarProps> = ({ noStopValueChange, setSortBy, sortBy }) =>
       <label>
         <h3>Фильтрация</h3>
         <p>Без остановок</p>
-        <input type="checkbox" onChange={noStopValueChange} />
+        <input type="checkbox" onChange={(e) => dispatch(nonStopValueChange(e.target.checked))} />
       </label>
       <label>
         <h3>Сортировка</h3>

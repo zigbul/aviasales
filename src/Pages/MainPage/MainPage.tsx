@@ -1,36 +1,32 @@
-import { FC, ChangeEvent } from 'react';
+import { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { SearchedParams, SortByTypes } from '../../types/types';
+import { AppDispatch, RootState } from '../../redux/store.ts';
 
 import SearchBar from '../../components/SearchBar';
 import Sidebar from '../../components/Sidebar';
 import TicketsList from '../../components/TicketList';
 
-type MainPageProps = {
-  params: SearchedParams;
-  setParams: (params: SearchedParams) => void;
-  noStopValueChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  sortBy: SortByTypes;
-  setSortBy: (sortBy: SortByTypes) => void;
-};
+import { fetchTickets } from '../../redux/slices/ticketsSlice';
 
-const MainPage: FC<MainPageProps> = ({
-  params,
-  setParams,
-  noStopValueChange,
-  setSortBy,
-  sortBy,
-}) => {
+const MainPage: FC = () => {
+  const { params } = useSelector((state: RootState) => state.tickets);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(fetchTickets(params));
+  }, [params, dispatch]);
+
   return (
     <div className="app">
       <header>
-        <SearchBar params={params} setParams={setParams} />
+        <SearchBar />
       </header>
       <div className="app__container">
-        <Sidebar noStopValueChange={noStopValueChange} setSortBy={setSortBy} sortBy={sortBy} />
+        <Sidebar />
         <main className="app__main">
           <h2>Билеты</h2>
-          <TicketsList params={params} sortBy={sortBy} />
+          <TicketsList />
         </main>
       </div>
     </div>

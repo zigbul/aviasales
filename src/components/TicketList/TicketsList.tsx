@@ -1,22 +1,21 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 
+import { useDispatch, useSelector } from 'react-redux';
+
 import './ticket-list.css';
 
-import { ITicketData, SearchedParams, SortByTypes } from '../../types/types';
-
-import useFetchTickets from '../../hooks/useFetchTickets.tsx';
+import { ITicketData } from '../../types/types.ts';
 
 import formatDuration from '../../utils/formatDuration.ts';
 import formatDateAndTime from '../../utils/formatDateAndTime.ts';
 import convertDurationInMinutes from '../../utils/convertDurationInMinutes.ts';
-
-type TicketListProps = {
-  params: SearchedParams;
-  sortBy: SortByTypes;
-};
+import { AppDispatch, RootState } from '../../redux/store.ts';
+import { selectTicket } from '../../redux/slices/ticketsSlice.ts';
 
 const TicketListItem: FC<ITicketData> = ({ id, price, validatingAirlineCodes, itineraries }) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   return (
     <li className="ticket-list__item ticket">
       <header className="ticket__header">
@@ -54,13 +53,15 @@ const TicketListItem: FC<ITicketData> = ({ id, price, validatingAirlineCodes, it
         </section>
       ))}
 
-      <Link to={`/ticket/${id}`}>Подробнее</Link>
+      <Link onClick={() => dispatch(selectTicket(id))} to={`/ticket/${id}`}>
+        Подробнее
+      </Link>
     </li>
   );
 };
 
-const TicketsList: FC<TicketListProps> = ({ params, sortBy }) => {
-  const { tickets, loading } = useFetchTickets(params);
+const TicketsList: FC = () => {
+  const { tickets, loading, sortBy } = useSelector((state: RootState) => state.tickets);
 
   const sortedTickets = [...tickets].sort((a, b) => {
     if (sortBy === 'duration') {

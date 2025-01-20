@@ -1,12 +1,23 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { RootState } from '../../redux/store';
 
 const TicketPage = () => {
+  const selectedTicket = useSelector((state: RootState) => state.tickets.selectedTicket);
   const navigate = useNavigate();
-  const { id } = useParams();
+
+  if (!selectedTicket) {
+    return (
+      <>
+        <h2>Такого перелёта не существует</h2>
+        <button onClick={() => navigate(-1)}>Назад</button>
+      </>
+    );
+  }
 
   return (
     <div>
-      <h2>Ticket Page with ID: {id}</h2>
+      <h2>Ticket Page with ID: {selectedTicket.id}</h2>
       <button onClick={() => navigate(-1)}>Назад</button>
     </div>
   );

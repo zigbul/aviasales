@@ -1,14 +1,15 @@
 import { FC, FormEvent, useState } from 'react';
-import { SearchedParams } from '../../types/types';
 
 import { isValidIATACode, isValidData } from '../../utils/validation.tsx';
 
-type SearchBarProps = {
-  params: SearchedParams;
-  setParams: (props: SearchedParams) => void;
-};
+import { setParams } from '../../redux/slices/ticketsSlice.ts';
+import { useSelector, useDispatch } from 'react-redux';
+import { AppDispatch, RootState } from '../../redux/store.ts';
 
-const SearchBar: FC<SearchBarProps> = ({ params, setParams }) => {
+const SearchBar: FC = () => {
+  const { params } = useSelector((state: RootState) => state.tickets);
+  const dispatch = useDispatch<AppDispatch>();
+
   const [originLocationCode, setOrigin] = useState('');
   const [destinationLocationCode, setDestination] = useState('');
   const [departureDate, setDepartureDate] = useState('');
@@ -18,12 +19,14 @@ const SearchBar: FC<SearchBarProps> = ({ params, setParams }) => {
     e.preventDefault();
 
     if (validateFields()) {
-      setParams({
-        ...params,
-        originLocationCode,
-        destinationLocationCode,
-        departureDate,
-      });
+      dispatch(
+        setParams({
+          ...params,
+          originLocationCode,
+          destinationLocationCode,
+          departureDate,
+        }),
+      );
 
       clearForm();
     }
