@@ -1,0 +1,51 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  width: 20rem;
+  background-color: #ffffff;
+  border: 0.1rem solid #dcdcdc;
+  border-radius: 0.8rem;
+  box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+  font-size: 1.4rem;
+
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  &__subtitle {
+    display: block;
+    font-size: 1.4rem;
+    color: #6c757d;
+    margin-bottom: 0.4rem;
+  }
+
+  &__checkbox-label,
+  &__radio-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  &__chekbox-input,
+  &__radio-input {
+    margin-right: 1rem;
+    width: 1.6rem;
+    height: 1.6rem;
+    accent-color: #1890ff;
+    cursor: pointer;
+  }
+
+  &__radio-label {
+    padding-top: 1rem;
+    border-top: 0.1rem solid #f1f1f1;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    padding: 1.6rem;
+  }
+}

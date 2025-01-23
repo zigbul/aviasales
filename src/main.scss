@@ -1,0 +1,44 @@
+@use './Pages/MainPage/MainPage.scss';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+html {
+  font-size: calc(10vw / 19.2);
+
+  @media (max-width: 1366px) {
+    html {
+      font-size: calc(10vw / 13.66);
+    }
+  }
+
+  @media (max-width: 1024px) {
+    html {
+      font-size: calc(10vw / 10.24);
+    }
+  }
+
+  @media (max-width: 768px) {
+    html {
+      font-size: calc(10vw / 7.68);
+    }
+  }
+
+  @media (max-width: 320px) {
+    html {
+      font-size: calc(10vw / 3.2);
+    }
+  }
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #333;
+  background-color: #f3f7fa;
+  line-height: 1.5;
+}

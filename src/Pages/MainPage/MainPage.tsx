@@ -18,18 +18,18 @@ const MainPage: FC = () => {
   }, [params, dispatch]);
 
   return (
-    <div className="app">
-      <header>
+    <article className="main">
+      <header className="main__header">
         <SearchBar />
       </header>
-      <div className="app__container">
+      <div className="main__container">
         <Sidebar />
-        <main className="app__main">
-          <h2>Билеты</h2>
+        <main className="main__content">
+          <h1 className="main__title">Билеты</h1>
           <TicketsList />
         </main>
       </div>
-    </div>
+    </article>
   );
 };
 

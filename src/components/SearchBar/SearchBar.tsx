@@ -1,10 +1,13 @@
 import { FC, FormEvent, useState } from 'react';
 
+import './SearchBar.scss';
+
 import { isValidIATACode, isValidData } from '../../utils/validation.tsx';
 
 import { setParams } from '../../redux/slices/ticketsSlice.ts';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppDispatch, RootState } from '../../redux/store.ts';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.tsx';
 
 const SearchBar: FC = () => {
   const { params } = useSelector((state: RootState) => state.tickets);
@@ -64,39 +67,32 @@ const SearchBar: FC = () => {
   return (
     <form className="search-bar" onSubmit={handleSearch}>
       <input
+        className="search-bar__text-input"
         type="text"
         placeholder="Откуда (IATA код)"
         value={originLocationCode}
         onChange={(e) => setOrigin(e.target.value.toUpperCase())}
       />
-      {errors.originLocationCode && (
-        <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-          {errors.originLocationCode}
-        </div>
-      )}
+      {errors.originLocationCode && <ErrorMessage>{errors.originLocationCode}</ErrorMessage>}
       <input
+        className="search-bar__text-input"
         type="text"
         placeholder="Куда (IATA код)"
         value={destinationLocationCode}
         onChange={(e) => setDestination(e.target.value.toUpperCase())}
       />
       {errors.destinationLocationCode && (
-        <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-          {errors.destinationLocationCode}
-        </div>
+        <ErrorMessage>{errors.destinationLocationCode}</ErrorMessage>
       )}
       <input
+        className="search-bar__date-input"
         type="date"
         placeholder="Дата вылета"
         value={departureDate}
         onChange={(e) => setDepartureDate(e.target.value)}
       />
-      {errors.departureDate && (
-        <div style={{ color: 'red', fontSize: '0.875rem', marginTop: '0.25rem' }}>
-          {errors.departureDate}
-        </div>
-      )}
-      <button type="submit" disabled={isDisabled}>
+      {errors.departureDate && <ErrorMessage>{errors.departureDate}</ErrorMessage>}
+      <button className="search-bar__submit-button" type="submit" disabled={isDisabled}>
         Поиск
       </button>
     </form>

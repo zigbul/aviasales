@@ -1,6 +1,6 @@
 import { ChangeEvent, FC } from 'react';
 
-import './sidebar.css';
+import './Sidebar.scss';
 
 import { SortByTypes } from '../../types/types.ts';
 import { RootState } from '../../redux/store.ts';
@@ -18,23 +18,29 @@ const Sidebar: FC = () => {
 
   return (
     <aside className="sidebar">
-      <label>
-        <h3>Фильтрация</h3>
-        <p>Без остановок</p>
-        <input type="checkbox" onChange={(e) => dispatch(nonStopValueChange(e.target.checked))} />
-      </label>
-      <label>
-        <h3>Сортировка</h3>
-        <span>По цене: </span>
+      <label className="sidebar__checkbox-label">
+        <h3 className="sidebar__title">Фильтрация</h3>
+        <span className="sidebar__subtitle">Без остановок</span>
         <input
+          className="sidebar__chekbox-input"
+          type="checkbox"
+          onChange={(e) => dispatch(nonStopValueChange(e.target.checked))}
+        />
+      </label>
+      <label className="sidebar__radio-label">
+        <h3 className="sidebar__title">Сортировка</h3>
+        <span className="sidebar__subtitle">По цене: </span>
+        <input
+          className="sidebar__radio-input"
           type="radio"
           name="sort"
           value="price"
           checked={sortBy === 'price'}
           onChange={onSortValueChange}
         />
-        <span>По длине перелёта: </span>
+        <span className="sidebar__subtitle">По длине перелёта: </span>
         <input
+          className="sidebar__radio-input"
           type="radio"
           name="sort"
           value="duration"

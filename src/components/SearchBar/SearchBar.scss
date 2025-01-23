@@ -1,0 +1,75 @@
+.search-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  padding: 2rem;
+  max-width: 50rem;
+  margin: 5rem auto;
+  border: 0.1rem solid #dcdcdc;
+  border-radius: 0.8rem;
+  background: linear-gradient(145deg, #ffffff, #f3f3f3);
+  box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.1);
+
+  &__text-input,
+  &__date-input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 4rem;
+    border: 0.1rem solid #ccc;
+    border-radius: 0.4rem;
+    font-size: 1.6rem;
+    font-family: inherit;
+    transition: all 0.3s;
+
+    &::placeholder {
+      color: #b3b3b3;
+    }
+
+    &:focus {
+      border-color: #1890ff;
+      box-shadow: 0 0.2rem 0.4rem rgba(24, 144, 255, 0.4);
+      outline: none;
+    }
+  }
+
+  &__text-input {
+    background: url('/src/assets/icons/location.svg') no-repeat 1rem center;
+    background-size: 2rem;
+  }
+
+  &__date-input {
+    background: url('/src/assets//icons/calendar.svg') no-repeat 1rem center;
+    background-size: 2rem;
+  }
+
+  &__submit-button {
+    padding: 1rem 2rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(145deg, #1890ff, #005cbf);
+    border: none;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    box-shadow: 0 0.4rem 0.8rem rgba(0, 0, 0, 0.2);
+    transition: all 0.3s;
+
+    &:hover {
+      background: linear-gradient(145deg, #005cbf, #003a80);
+    }
+
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.15);
+    }
+
+    &:disabled {
+      background: #d3d3d3;
+      cursor: not-allowed;
+    }
+  }
+
+  @media (max-width: 768px) {
+    margin: 2rem 1rem;
+    max-width: 100%;
+  }
+}
